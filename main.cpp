@@ -3,20 +3,59 @@
 #include <iostream>
 #include "BFS/bfs.h"
 #include "DFS/dfs.h"
+#include <random>
+#include <cmath>
+std::vector<sf::Vector2f> generateRandomPoints(int N, float width, float height) {
+    std::vector<sf::Vector2f> points(N);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> disX(50, width - 50);
+    std::uniform_real_distribution<> disY(50, height - 50);
+
+    for (int i = 0; i < N; ++i) {
+        points[i] = sf::Vector2f(disX(gen), disY(gen));
+    }
+    return points;
+}
+
+
+std::vector<Edge> generateRandomEdges(int N, int edgeCount) {
+    std::vector<Edge> edges;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, N - 1);
+
+    for (int i = 1; i < N; ++i) {
+        int src = dis(gen) % i;
+        int dest = i;
+        edges.push_back({src, dest});
+    }
+
+    for (int i = N; i < edgeCount; ++i) {
+        int src = dis(gen);
+        int dest = dis(gen);
+        if (src != dest) {
+            edges.push_back({src, dest});
+        }
+    }
+
+    return edges;
+}
 
 void initializeNodes(std::vector<sf::CircleShape>& nodes, const std::vector<sf::Vector2f>& positions) {
     for (size_t i = 0; i < nodes.size(); ++i) {
-        nodes[i].setRadius(20);
+        nodes[i].setRadius(7);
         nodes[i].setFillColor(sf::Color::White);
         nodes[i].setPosition(positions[i]);
         nodes[i].setOrigin(nodes[i].getRadius(), nodes[i].getRadius());
     }
 }
+
 void visualizeGraph(const std::string& windowTitle, const Graph& graph, const std::vector<Edge>& edges, bool isBFS) {
     int N = graph.adjList.size();
-    sf::RenderWindow window(sf::VideoMode(800, 800), windowTitle);
+    sf::RenderWindow window(sf::VideoMode(1500, 900), windowTitle);
     std::vector<sf::CircleShape> nodes(N);
-    std::vector<sf::Vector2f> positions = { {100, 100}, {200, 200}, {300, 100}, {400, 200}, {500, 100}, {600, 200}, {700, 100}, {500, 300}, {300, 300} };
+    auto positions = generateRandomPoints(N, 1500, 900);
     initializeNodes(nodes, positions);
 
     std::vector<std::pair<int, int>> edgesVisited;
@@ -24,6 +63,7 @@ void visualizeGraph(const std::string& windowTitle, const Graph& graph, const st
     std::vector<int> traversalOrder;
     bool startSearch = false;
     size_t edgeIndex = 0;
+    sf::Clock clock;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -31,20 +71,35 @@ void visualizeGraph(const std::string& windowTitle, const Graph& graph, const st
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Space) {
-                    if (!startSearch) {
-                        if (isBFS) {
-                            traversalOrder = BFS(graph, 0, visited, edgesVisited);
-                        } else {
-                            traversalOrder = DFS(graph, 0, visited, edgesVisited);
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!startSearch) {
+                    if (isBFS) {
+                        for (int i = 0; i < N; ++i) {
+                            if (!visited[i]) {
+                                std::vector<int> subTraversalOrder = BFS(graph, i, visited, edgesVisited);
+                                traversalOrder.insert(traversalOrder.end(), subTraversalOrder.begin(), subTraversalOrder.end());
+                            }
                         }
-                        startSearch = true;
-                    } else if (edgeIndex < edgesVisited.size()) {
-                        edgeIndex++;
+                    } else {
+                        for (int i = 0; i < N; ++i) {
+                            if (!visited[i]) {
+                                std::vector<int> subTraversalOrder = DFS(graph, i, visited, edgesVisited);
+                                traversalOrder.insert(traversalOrder.end(), subTraversalOrder.begin(), subTraversalOrder.end());
+                            }
+                        }
                     }
+                    startSearch = true;
+                } else if (edges.size() <= 25 && edgeIndex < edgesVisited.size()) {
+                    edgeIndex++;
                 }
             }
+        }
+
+        if (edges.size() > 25 && clock.getElapsedTime().asMilliseconds() > 2) {
+            if (edgeIndex < edgesVisited.size()) {
+                edgeIndex++;
+            }
+            clock.restart();
         }
 
         window.clear(sf::Color::Black);
@@ -73,8 +128,9 @@ void visualizeGraph(const std::string& windowTitle, const Graph& graph, const st
 }
 
 int main() {
-    std::vector<Edge> edges = { {0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7}, {5, 8} };
-    int N = 9;
+    int N = 1000;
+    int edgeCount = 1700;
+    auto edges = generateRandomEdges(N, edgeCount);
     Graph graph(edges, N);
 
     visualizeGraph("BFS Visualization", graph, edges, true);
