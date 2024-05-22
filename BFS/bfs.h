@@ -3,6 +3,8 @@
 #pragma once
 #include "C:\projects\c++\labs\lab04\data_structures\graph.h"
 #include <vector>
+#include <queue>
+
 
 std::vector<int> BFS(const Graph &graph, int start, std::vector<bool> &visited, std::vector<std::pair<int, int>> &edgesVisited);
 
