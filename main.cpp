@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "Kruskal's_algorithm/kruskal.h"
+#include "kruskals_algorithm/kruskal.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -154,7 +154,7 @@ int main() {
 
     graph.generateRandomGraph(900);
 
-    sf::RenderWindow window(sf::VideoMode(750, 750), "Kruskal's Algorithm Visualization");
+    sf::RenderWindow window(sf::VideoMode(1500, 900), "Kruskal's Algorithm Visualization");
     window.setFramerateLimit(60);
 
     while (window.isOpen()) {

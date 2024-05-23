@@ -30,12 +30,13 @@ void Graph_krus::generateRandomGraph(int numEdges) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> vertexDist(0, vertices - 1);
-    std::uniform_int_distribution<> weightDist(1, 20); // Ваги від 1 до 20
-    std::uniform_real_distribution<float> posDist(50, 700); // Координати вузлів від 50 до 700
+    std::uniform_int_distribution<> weightDist(1, 20);
+    std::uniform_real_distribution<float> posDistX(50, 1450);
+    std::uniform_real_distribution<float> posDistY(50, 850);
 
     for (int i = 0; i < vertices; ++i) {
-        float x = posDist(gen);
-        float y = posDist(gen);
+        float x = posDistX(gen);
+        float y = posDistY(gen);
         nodePositions.push_back({x, y});
     }
 
@@ -137,10 +138,10 @@ void Graph_krus::colorEdge(sf::RenderWindow& window, int u, int v, int weight, s
 
 void Graph_krus::drawNodes(sf::RenderWindow& window) {
     for (int i = 0; i < vertices; ++i) {
-        sf::CircleShape node(4);
+        sf::CircleShape node(7);
         node.setFillColor(sf::Color::White);
         auto [x, y] = nodePositions[i];
-        node.setPosition(x - node.getRadius(), y - node.getRadius()); // Центрування вузла
+        node.setPosition(x - node.getRadius(), y - node.getRadius());
         window.draw(node);
     }
 }
