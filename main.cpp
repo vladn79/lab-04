@@ -1,10 +1,15 @@
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include "Kruskal's_algorithm/kruskal.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "BFS/bfs.h"
 #include "DFS/dfs.h"
 #include <random>
 #include <cmath>
+#include <vector>
+
+
 std::vector<sf::Vector2f> generateRandomPoints(int N, float width, float height) {
     std::vector<sf::Vector2f> points(N);
     std::random_device rd;
@@ -127,15 +132,60 @@ void visualizeGraph(const std::string& windowTitle, const Graph& graph, const st
     }
 }
 
+
+
 int main() {
+
     int N = 1000;
     int edgeCount = 1700;
     auto edges = generateRandomEdges(N, edgeCount);
-    Graph graph(edges, N);
+    Graph graph1(edges, N);
 
-    visualizeGraph("BFS Visualization", graph, edges, true);
+    visualizeGraph("BFS Visualization", graph1, edges, true);
 
-    visualizeGraph("DFS Visualization", graph, edges, false);
+    visualizeGraph("DFS Visualization", graph1, edges, false);
+
+
+
+
+
+    int vertices = 500;
+    Graph_krus graph(vertices);
+
+    graph.generateRandomGraph(900);
+
+    sf::RenderWindow window(sf::VideoMode(750, 750), "Kruskal's Algorithm Visualization");
+    window.setFramerateLimit(60);
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph.reset();
+                graph.generateRandomGraph(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph.kruskalStep()) {
+                    std::cout << "MST Complete" << std::endl;
+                }
+            }
+        }
+        if (vertices > 7) {
+            if (!graph.kruskalStep()) {
+                std::cout << "MST Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+
+        window.clear();
+        graph.draw(window);
+        window.display();
+    }
 
     return 0;
 }
