@@ -2,6 +2,7 @@
 #include "kruskals_algorithm/kruskal.h"
 #include "prim_algorithm/prim.h"
 #include "dijkstra_algorithm/dijkstra.h"
+#include "astar_algorithm/astar.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -263,6 +264,44 @@ int main() {
         window2.clear();
         graph_dijkstra.draw_dijkstra(window2);
         window2.display();
+    }
+
+
+    Graph_astar graph_astar(vertices);
+    graph_astar.generateRandomGraph_astar(900);
+
+    sf::RenderWindow window3(sf::VideoMode(1500, 900), "A* Algorithm Visualization");
+    window3.setFramerateLimit(60);
+
+    while (window3.isOpen()) {
+        sf::Event event;
+        while (window3.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window3.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph_astar.reset_astar();
+                graph_astar.generateRandomGraph_astar(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph_astar.astarStep_astar()) {
+                    std::cout << "A* Complete" << std::endl;
+                }
+            }
+        }
+
+        if (vertices > 7) {
+            if (!graph_astar.astarStep_astar()) {
+                std::cout << "A* Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+
+        window3.clear();
+        graph_astar.draw_astar(window3);
+        window3.display();
     }
 
 
