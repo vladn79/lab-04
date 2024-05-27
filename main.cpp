@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "kruskals_algorithm/kruskal.h"
+#include "prim_algorithm/prim.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -186,6 +187,46 @@ int main() {
         graph.draw(window);
         window.display();
     }
+
+
+    Graph_prima graph_prima(vertices);
+
+    graph_prima.generateRandomGraph_prima(900);
+
+    sf::RenderWindow window1(sf::VideoMode(1500, 900), "Prim's Algorithm Visualization");
+    window1.setFramerateLimit(60);
+
+    while (window1.isOpen()) {
+        sf::Event event;
+        while (window1.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window1.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph_prima.reset_prima();
+                graph_prima.generateRandomGraph_prima(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph_prima.primaStep_prima()) {
+                    std::cout << "MST Complete" << std::endl;
+                }
+            }
+        }
+        if (vertices > 7) {
+            if (!graph_prima.primaStep_prima()) {
+                std::cout << "MST Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+
+        window1.clear();
+        graph_prima.draw_prima(window1);
+        window1.display();
+    }
+
+
 
     return 0;
 }
