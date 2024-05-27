@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "kruskals_algorithm/kruskal.h"
 #include "prim_algorithm/prim.h"
+#include "dijkstra_algorithm/dijkstra.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -224,6 +225,44 @@ int main() {
         window1.clear();
         graph_prima.draw_prima(window1);
         window1.display();
+    }
+
+
+    Graph_dijkstra graph_dijkstra(vertices);
+
+    graph_dijkstra.generateRandomGraph_dijkstra(900);
+
+    sf::RenderWindow window2(sf::VideoMode(1500, 900), "Dijkstra's Algorithm Visualization");
+    window2.setFramerateLimit(60);
+
+    while (window2.isOpen()) {
+        sf::Event event;
+        while (window2.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window2.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph_dijkstra.reset_dijkstra();
+                graph_dijkstra.generateRandomGraph_dijkstra(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph_dijkstra.dijkstraStep_dijkstra()) {
+                    std::cout << "Dijkstra Complete" << std::endl;
+                }
+            }
+        }
+        if (vertices > 7) {
+            if (!graph_dijkstra.dijkstraStep_dijkstra()) {
+                std::cout << "Dijkstra Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+
+        window2.clear();
+        graph_dijkstra.draw_dijkstra(window2);
+        window2.display();
     }
 
 
