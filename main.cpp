@@ -3,6 +3,7 @@
 #include "prim_algorithm/prim.h"
 #include "dijkstra_algorithm/dijkstra.h"
 #include "astar_algorithm/astar.h"
+#include "bellman-ford_algorithm/bellman-ford.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -302,6 +303,45 @@ int main() {
         window3.clear();
         graph_astar.draw_astar(window3);
         window3.display();
+    }
+
+
+
+    Graph_bellman graph_bel(vertices);
+    graph_bel.generateRandomGraph_bellman(900);
+
+    sf::RenderWindow window4(sf::VideoMode(1500, 900), "Bellman-Ford Algorithm Visualization");
+    window4.setFramerateLimit(60);
+
+    while (window4.isOpen()) {
+        sf::Event event;
+        while (window4.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph_bel.reset_bellman();
+                graph_bel.generateRandomGraph_bellman(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph_bel.bellmanStep_bellman()) {
+                    std::cout << "Bellman-Ford Complete" << std::endl;
+                }
+            }
+        }
+
+        if (vertices > 7) {
+            if (!graph_bel.bellmanStep_bellman()) {
+                std::cout << "Bellman-Ford Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+
+        window4.clear();
+        graph_bel.draw_bellman(window4);
+        window4.display();
     }
 
 
