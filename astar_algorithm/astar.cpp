@@ -152,7 +152,7 @@ void Graph_astar::colorEdge_astar(sf::RenderWindow& window, int u, int v, int we
 
 void Graph_astar::drawNodes_astar(sf::RenderWindow& window) {
     for (int i = 0; i < vertices; ++i) {
-        sf::CircleShape node(7);
+        sf::CircleShape node(3);
         node.setFillColor(sf::Color::White);
         auto x = nodePositionsX[i];
         auto y = nodePositionsY[i];

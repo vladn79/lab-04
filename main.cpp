@@ -5,6 +5,7 @@
 #include "astar_algorithm/astar.h"
 #include "bellman-ford_algorithm/bellman-ford.h"
 #include "johnson_algorithm/johnson.h"
+#include "ford_fulkerson_algorithm/ford_fulkerson.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -54,7 +55,7 @@ std::vector<Edge> generateRandomEdges(int N, int edgeCount) {
 
 void initializeNodes(std::vector<sf::CircleShape>& nodes, const std::vector<sf::Vector2f>& positions) {
     for (size_t i = 0; i < nodes.size(); ++i) {
-        nodes[i].setRadius(7);
+        nodes[i].setRadius(3);
         nodes[i].setFillColor(sf::Color::White);
         nodes[i].setPosition(positions[i]);
         nodes[i].setOrigin(nodes[i].getRadius(), nodes[i].getRadius());
@@ -141,8 +142,8 @@ void visualizeGraph(const std::string& windowTitle, const Graph& graph, const st
 
 int main() {
 
-    int N = 1000;
-    int edgeCount = 1700;
+    int N = 500;
+    int edgeCount = 900;
     auto edges = generateRandomEdges(N, edgeCount);
     Graph graph1(edges, N);
 
@@ -153,10 +154,10 @@ int main() {
 
 
 
-    int vertices = 1000;
+    int vertices = 500;
    Graph_krus graph(vertices);
 
-    graph.generateRandomGraph(1700);
+    graph.generateRandomGraph(700);
 
     sf::RenderWindow window(sf::VideoMode(1500, 900), "Kruskal's Algorithm Visualization");
     window.setFramerateLimit(60);
@@ -183,7 +184,7 @@ int main() {
             if (!graph.kruskalStep()) {
                 std::cout << "MST Complete" << std::endl;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
         }
 
         window.clear();
@@ -194,7 +195,7 @@ int main() {
 
     Graph_prima graph_prima(vertices);
 
-    graph_prima.generateRandomGraph_prima(900);
+    graph_prima.generateRandomGraph_prima(800);
 
     sf::RenderWindow window1(sf::VideoMode(1500, 900), "Prim's Algorithm Visualization");
     window1.setFramerateLimit(60);
@@ -221,7 +222,7 @@ int main() {
             if (!graph_prima.primaStep_prima()) {
                 std::cout << "MST Complete" << std::endl;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
         }
 
         window1.clear();
@@ -232,7 +233,7 @@ int main() {
 
     Graph_dijkstra graph_dijkstra(vertices);
 
-    graph_dijkstra.generateRandomGraph_dijkstra(900);
+    graph_dijkstra.generateRandomGraph_dijkstra(700);
 
     sf::RenderWindow window2(sf::VideoMode(1500, 900), "Dijkstra's Algorithm Visualization");
     window2.setFramerateLimit(60);
@@ -259,7 +260,7 @@ int main() {
             if (!graph_dijkstra.dijkstraStep_dijkstra()) {
                 std::cout << "Dijkstra Complete" << std::endl;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
         }
 
         window2.clear();
@@ -269,7 +270,7 @@ int main() {
 
 
     Graph_astar graph_astar(vertices);
-    graph_astar.generateRandomGraph_astar(900);
+    graph_astar.generateRandomGraph_astar(700);
 
     sf::RenderWindow window3(sf::VideoMode(1500, 900), "A* Algorithm Visualization");
     window3.setFramerateLimit(60);
@@ -297,7 +298,7 @@ int main() {
             if (!graph_astar.astarStep_astar()) {
                 std::cout << "A* Complete" << std::endl;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
         }
 
         window3.clear();
@@ -307,8 +308,84 @@ int main() {
 
 
 
-   /*Graph_bellman graph_bel(vertices);
-    graph_bel.generateRandomGraph_bellman(900);
+
+
+    Graph_johnson graph_johnson(vertices);
+
+    graph_johnson.generateRandomGraph_johnson(700);
+
+    sf::RenderWindow window5(sf::VideoMode(1500, 900), "Johnson's Algorithm Visualization");
+    window5.setFramerateLimit(60);
+
+    while (window5.isOpen()) {
+        sf::Event event;
+        while (window5.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window5.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph_johnson.reset_johnson();
+                graph_johnson.generateRandomGraph_johnson(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph_johnson.johnsonStep_johnson()) {
+                    std::cout << "Johnson Complete" << std::endl;
+                }
+            }
+        }
+        if (vertices > 7) {
+            if (!graph_johnson.johnsonStep_johnson()) {
+                std::cout << "Johnson Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
+        }
+
+        window5.clear();
+        graph_johnson.draw_johnson(window5);
+        window5.display();
+    }
+/*
+    Graph_fordFulkerson graph_fordFulkerson(vertices);
+
+    graph_fordFulkerson.generateRandomGraph_fordFulkerson(900);
+
+    sf::RenderWindow window6(sf::VideoMode(1500, 900), "Ford-Fulkerson Algorithm Visualization");
+    window6.setFramerateLimit(60);
+
+    while (window6.isOpen()) {
+        sf::Event event;
+        while (window6.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph_fordFulkerson.reset_fordFulkerson();
+                graph_fordFulkerson.generateRandomGraph_fordFulkerson(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph_fordFulkerson.fordFulkersonStep_fordFulkerson()) {
+                    std::cout << "Ford-Fulkerson Complete" << std::endl;
+                }
+            }
+        }
+        if (vertices > 7) {
+            if (!graph_fordFulkerson.fordFulkersonStep_fordFulkerson()) {
+                std::cout << "Ford-Fulkerson Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+
+        window6.clear();
+        graph_fordFulkerson.draw_fordFulkerson(window6);
+        window6.display();
+    } */
+
+    Graph_bellman graph_bel(vertices);
+    graph_bel.generateRandomGraph_bellman(700);
 
     sf::RenderWindow window4(sf::VideoMode(1500, 900), "Bellman-Ford Algorithm Visualization");
     window4.setFramerateLimit(60);
@@ -336,49 +413,12 @@ int main() {
             if (!graph_bel.bellmanStep_bellman()) {
                 std::cout << "Bellman-Ford Complete" << std::endl;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
         }
 
         window4.clear();
         graph_bel.draw_bellman(window4);
         window4.display();
-    }*/
-
-    Graph_johnson graph_johnson(vertices);
-
-    graph_johnson.generateRandomGraph_johnson(900);
-
-    sf::RenderWindow window5(sf::VideoMode(1500, 900), "Johnson's Algorithm Visualization");
-    window5.setFramerateLimit(60);
-
-    while (window5.isOpen()) {
-        sf::Event event;
-        while (window5.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window5.close();
-            }
-
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
-                graph_johnson.reset_johnson();
-                graph_johnson.generateRandomGraph_johnson(900);
-            }
-
-            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
-                if (!graph_johnson.johnsonStep_johnson()) {
-                    std::cout << "Johnson Complete" << std::endl;
-                }
-            }
-        }
-        if (vertices > 7) {
-            if (!graph_johnson.johnsonStep_johnson()) {
-                std::cout << "Johnson Complete" << std::endl;
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
-        }
-
-        window5.clear();
-        graph_johnson.draw_johnson(window5);
-        window5.display();
     }
 
 

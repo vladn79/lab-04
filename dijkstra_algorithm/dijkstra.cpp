@@ -138,7 +138,7 @@ void Graph_dijkstra::colorEdge_dijkstra(sf::RenderWindow& window, int u, int v, 
 
 void Graph_dijkstra::drawNodes_dijkstra(sf::RenderWindow& window) {
     for (int i = 0; i < vertices; ++i) {
-        sf::CircleShape node(7);
+        sf::CircleShape node(3);
         node.setFillColor(sf::Color::White);
         auto x = nodePositionsX[i];
         auto y = nodePositionsY[i];

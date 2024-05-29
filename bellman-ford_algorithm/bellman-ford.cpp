@@ -123,7 +123,7 @@ void Graph_bellman::colorEdge_bellman(sf::RenderWindow& window, int u, int v, in
 
 void Graph_bellman::drawNodes_bellman(sf::RenderWindow& window) {
     for (int i = 0; i < vertices; ++i) {
-        sf::CircleShape node(7);
+        sf::CircleShape node(3);
         node.setFillColor(sf::Color::White);
         auto x = nodePositionsX[i];
         auto y = nodePositionsY[i];

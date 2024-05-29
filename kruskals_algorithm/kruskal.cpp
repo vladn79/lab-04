@@ -138,7 +138,7 @@ void Graph_krus::colorEdge(sf::RenderWindow& window, int u, int v, int weight, s
 
 void Graph_krus::drawNodes(sf::RenderWindow& window) {
     for (int i = 0; i < vertices; ++i) {
-        sf::CircleShape node(7);
+        sf::CircleShape node(3);
         node.setFillColor(sf::Color::White);
         auto [x, y] = nodePositions[i];
         node.setPosition(x - node.getRadius(), y - node.getRadius());

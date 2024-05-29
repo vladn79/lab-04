@@ -116,7 +116,7 @@ void Graph_prima::colorEdge_prima(sf::RenderWindow& window, int u, int v, int we
 
 void Graph_prima::drawNodes_prima(sf::RenderWindow& window) {
     for (int i = 0; i < vertices; ++i) {
-        sf::CircleShape node(7);
+        sf::CircleShape node(3);
         node.setFillColor(sf::Color::White);
         auto [x, y] = nodePositions[i];
         node.setPosition(x - node.getRadius(), y - node.getRadius());
