@@ -4,6 +4,7 @@
 #include "dijkstra_algorithm/dijkstra.h"
 #include "astar_algorithm/astar.h"
 #include "bellman-ford_algorithm/bellman-ford.h"
+#include "johnson_algorithm/johnson.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -152,11 +153,10 @@ int main() {
 
 
 
+    int vertices = 1000;
+   Graph_krus graph(vertices);
 
-    int vertices = 500;
-    Graph_krus graph(vertices);
-
-    graph.generateRandomGraph(900);
+    graph.generateRandomGraph(1700);
 
     sf::RenderWindow window(sf::VideoMode(1500, 900), "Kruskal's Algorithm Visualization");
     window.setFramerateLimit(60);
@@ -307,7 +307,7 @@ int main() {
 
 
 
-    Graph_bellman graph_bel(vertices);
+   /*Graph_bellman graph_bel(vertices);
     graph_bel.generateRandomGraph_bellman(900);
 
     sf::RenderWindow window4(sf::VideoMode(1500, 900), "Bellman-Ford Algorithm Visualization");
@@ -342,8 +342,44 @@ int main() {
         window4.clear();
         graph_bel.draw_bellman(window4);
         window4.display();
-    }
+    }*/
 
+    Graph_johnson graph_johnson(vertices);
+
+    graph_johnson.generateRandomGraph_johnson(900);
+
+    sf::RenderWindow window5(sf::VideoMode(1500, 900), "Johnson's Algorithm Visualization");
+    window5.setFramerateLimit(60);
+
+    while (window5.isOpen()) {
+        sf::Event event;
+        while (window5.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window5.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                graph_johnson.reset_johnson();
+                graph_johnson.generateRandomGraph_johnson(900);
+            }
+
+            if (vertices <= 7 && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (!graph_johnson.johnsonStep_johnson()) {
+                    std::cout << "Johnson Complete" << std::endl;
+                }
+            }
+        }
+        if (vertices > 7) {
+            if (!graph_johnson.johnsonStep_johnson()) {
+                std::cout << "Johnson Complete" << std::endl;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+
+        window5.clear();
+        graph_johnson.draw_johnson(window5);
+        window5.display();
+    }
 
 
     return 0;
